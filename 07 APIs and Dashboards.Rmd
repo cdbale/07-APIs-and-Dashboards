@@ -242,8 +242,7 @@ What are some ways we could improve this dashboard? What kind of visualizations 
 
 ## Exercise 7
 
-In RStudio, do the following in *two* documents.
+In RStudio, do the following.
 
-1.  In a Quarto document with `format: docx`, wrangle the customer data to include the total amount spent in-store for each customer. Write this data as a CSV file *in the Exercises folder*.
-2.  In an R Markdown document, modify the dashboard from class by importing the new data, adding a second input function to the sidebar to select from `college_degree`, modifying the plot to filter on both input functions, replacing age with total amount spent in-store in the plot, and modifying the call-out boxes to filter on both input functions.
-3.  Knit the R Markdown document and publish it on shinyapps.io. Include the link at the end of the Quarto document (add a link with `[text](URL)`), rendered as a Word document, and upload to Canvas.
+1.  Look over the project instructions file and different options for pain points to address, and write a plan for how you will accomplish your project. Include at least a few sentences addressing every part of the project, including cleaning the data, creating visualizations, creating the dashboard, and the executive summary.
+2. Render your plan as a Word document, and upload to Canvas.
