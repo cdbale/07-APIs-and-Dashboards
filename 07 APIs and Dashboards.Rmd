@@ -9,389 +9,240 @@ output:
 
 ## Marketing Analytics Process
 
-<center>
-![](Figures/process_import.png){width=900px}
-</center>
+<center>![](Figures/process_import.png){width="900px"}</center>
 
 ## Motivating Example
 
-Now that your supervisor has seen you successfully work with the PostgreSQL database, she wants you to access some survey data through an API. Have you used an API before?
-
-Additionally, she wants you to find some way to display all of these visualizations in a more interactive format. She would like to avoid having to create a long report filled with scatterplots of every single combination of numerical variables, for example. How might this be accomplished?
-
-
-## APIs
-
-Databases are a type of server. Instead of querying a database, **APIs** (Application Programming Interfaces) are a *general* way to access any server that provide permission to access data along with securely controlling what and how much data you can access.
-
-<center>
-![](Figures/import_api.png){width=850px}
-</center>
-
-## API Clients
-
-Just like SQL has a variety of *backends*, to use an API you should use an **API client** specific to the server. Also like SQL backends, there are a plethora of R packages that provide API clients for specific servers (e.g., {twitteR}, {Rfacebook}, {RGoogleAnalytics}, {WikipediR}, {qualtRics}). API clients differ, but they typically require at least:
-
-- Key: An API key is like a username that can change.
-- Token: An API token is like a password that can change.
-
-## Use an API
-
-Install and load the {qualtRics} package so that we can access the survey data. Remember to press Tools then Install Packages to install it before trying to load it.
-
-In the console (NOT a code chunk), call the following:
-
-```{r eval=FALSE}
-qualtRics::qualtrics_api_credentials(
-  api_key = "Ir2JDPvhOjSmMIpWo8bwVUAbvPs6uwGqIKipAuo6", 
-  base_url = "sjc1.qualtrics.com"
-)
-
-readRenviron("~/.Renviron")
-```
-
-## Import Data
-
-We can see what surveys are available to download.
-
-```{r eval=FALSE}
-all_surveys()
-```
-```
-A tibble:31 × 6
-id
-<chr>
-name
-<chr>
-SV_1TFWeGsZETeQ8iF	BYU Football Games - Version 2	
-SV_22X0es9h7D1oeZ7	Exploratory Survey	
-SV_3QoN1MI4YB7AMM5	Ad Test1	
-SV_6QYEA2VoFvNUDyd	Jones Creek Beef - Segmentation Survey	
-SV_73xYIxZuxsqAx6Z	Hammocks Are Life	
-SV_87KkMWnKXeqCS4R	Traeger Segmentation - 2018	
-SV_0HQgoMnDwrNr94h	Marketing Analytics (Winter 2017)	
-SV_0rn3HbR4AEc1BUG	Patagonia Survey	
-SV_1ZI97M8G0xOckwl	Statistics in Marketing Research	
-SV_3eXBQuVE8opSXgp	Marketing Core Evaluation
-```
-
----
-
-We can import data by using the survey ID.
-
-```{r eval=FALSE}
-survey_data <- fetch_survey("SV_8B5zozRL3hVr8dU")
-
-survey_data
-```
-
-```
-# A tibble: 34 x 42
-   StartDate           EndDate             Status IPAddress Progress `Duration (in s… Finished RecordedDate        ResponseId
-   <dttm>              <dttm>              <chr>  <chr>        <dbl>            <dbl> <lgl>    <dttm>              <chr>     
- 1 2020-12-30 00:48:52 2020-12-30 00:50:34 Surve… NA             100              102 TRUE     2020-12-30 00:50:35 R_AM9A0iN…
- 2 2020-12-30 00:50:42 2020-12-30 00:52:21 Surve… NA             100               99 TRUE     2020-12-30 00:52:22 R_1eLAhrD…
- 3 2020-12-30 01:12:15 2020-12-30 01:14:13 IP Ad… 69.21.24…      100              117 TRUE     2020-12-30 01:14:13 R_2VQ1b90…
- 4 2020-12-30 01:12:11 2020-12-30 01:14:39 IP Ad… 98.161.1…      100              147 TRUE     2020-12-30 01:14:39 R_2DU1SWB…
- 5 2020-12-30 01:12:17 2020-12-30 01:16:52 IP Ad… 136.36.6…      100              275 TRUE     2020-12-30 01:16:52 R_3RxwMy2…
- 6 2020-12-30 01:56:33 2020-12-30 02:03:35 IP Ad… 47.216.3…      100              422 TRUE     2020-12-30 02:03:36 R_2SdDsLb…
- 7 2020-12-30 02:01:39 2020-12-30 02:07:50 IP Ad… 107.77.2…      100              371 TRUE     2020-12-30 02:07:51 R_3kp0i4h…
- 8 2020-12-30 02:18:40 2020-12-30 02:21:04 IP Ad… 71.214.1…      100              144 TRUE     2020-12-30 02:21:04 R_2wzwNjg…
- 9 2020-12-30 02:48:46 2020-12-30 02:53:16 IP Ad… 70.163.1…      100              270 TRUE     2020-12-30 02:53:16 R_3Jzv2iX…
-10 2020-12-30 03:26:36 2020-12-30 03:29:49 IP Ad… 98.202.1…      100              193 TRUE     2020-12-30 03:29:50 R_3HFeUj9…
-# … with 32 more rows, and 35 more variables: RecipientLastName <lgl>, RecipientFirstName <lgl>, RecipientEmail <lgl>,
-#   ExternalReference <lgl>, LocationLatitude <dbl>, LocationLongitude <dbl>, DistributionChannel <chr>, UserLanguage <chr>, Q1 <ord>,
-#   Q2 <chr>, Q3 <chr>, Q4 <chr>, Q5 <chr>, Q6 <ord>, Q7 <chr>, Q8 <chr>, Q9 <ord>, Q10 <ord>, Q11 <ord>, Q12 <ord>, Q13_1 <chr>,
-#   Q13_2 <chr>, Q13_3 <chr>, Q13_6 <chr>, Q13_7 <chr>, Q13_8 <chr>, Q13_9 <chr>, Q13_12 <chr>, Q13_13 <chr>, Q13_14 <chr>,
-#   Q13_15 <chr>, Q14 <chr>, Q15 <ord>, Q16 <ord>, Q17 <ord>
-```
-
-## Good Practices
-
-We've discussed a few good practices when it comes to importing data:
-
-- Disconnect from databases after importing data.
-- Don't save sensitive credentials in your code.
-- Write data locally (with permission) once it's been imported.
-
-When we import data from a server in Quarto, every time we render the document it will re-execute and eat up server bandwidth (i.e., database access or API calls). It's better to do this once and then, if we need to show how we got the data, include the code with the relevant cell set to `#| eval: false`.
-
-## Your Turn!
-
-Save the data locally as a CSV like we learned how to last time. Then set the chunk where you accessed the survey data to `#| eval: false`.
-
-## Solution 
-
-```{r eval=FALSE}
-
-survey_data |> 
-  write_csv("store_revenue.csv")
-
-```
-
+Now that your supervisor has seen you successfully work with the database and Qualtrics API, she wants you to find some way to display all of these visualizations in a more interactive format. She would like to avoid having to create a long report filled with scatterplots of every single combination of numerical variables, for example. How might this be accomplished?
 
 ## Marketing Analytics Process
 
-<center>
-![](Figures/process_communicate.png){width=900px}
-</center>
+<center>![](Figures/process_communicate.png){width="900px"}</center>
 
----
-
-![](Figures/hex_rmarkdown-flexdashboard-shiny.png){width=920px}
+------------------------------------------------------------------------
 
 ## Data Products
 
 Remember that an analyst needs to interpret and communicate insights in a way that **clearly informs the managerial decision**. The form that communication takes depends on the audience.
 
-- Professional visualizations are essential.
-- Reports and presentations provide context, details, and explanations.
-- Dashboards and webapps enable interacting with the data.
-- APIs allow direct access to data, models, and results.
+-   Professional visualizations are essential.
+-   Reports and presentations provide context, details, and explanations.
+-   Dashboards and webapps enable interacting with the data.
+-   APIs allow direct access to data, models, and results.
 
 Dashboards, webapps, and APIs are examples of **data products**, ways to share data, models, and results interactively.
 
 ## Dashboards
 
-We can use **dashboards** to interactively report on key performance indicators, visualizations, and data exploration. We can build dashboards using R Markdown. We'll also use [{shiny}](https://shiny.rstudio.com) functions, the industry-standard for webapps, to make the dashboard interactive.
+We can use **dashboards** to interactively report on key performance indicators, visualizations, and data exploration. We can build dashboards using Quarto, and then publish them online for stakeholders to view using Quarto Pub.
 
-Install the {markdown}, {rmarkdown}, {flexdashboard}, {shiny}, and {rsconnect} packages. Create a new dashboard by creating an **R Markdown** document > **From Template** > **Flex Dashboard**.
+For your upcoming project, you will be working with a company called iFood. They are an online food ordering and delivery app. Think DoorDash, but in Brazil. They have come to you with some marketing pain points. You will have a chance to explore these using the data they provide you with. Making a dashboard will be an important way to communicate your findings.
 
-## Patagonia CRM Dashboard
+## Example Dashboard
 
-We'll be building [this CRM dashboard](https://marcdotson.shinyapps.io/patagonia_crm/).
-
-<center>
-![](Figures/flexdashboard_example.png){width=850px}
-</center>
+For our example here in class, we'll be building [this customer churn dashboard](https://sofiadscribner.quarto.pub/ifood-dashboard/). iFood has some concerns about customer churn, and they're trying to pinpoint what demographics are the most prone to churning, as well as how the churn rate has changed over time. Using data analysis and visualization, we can help them decide how best to prevent some of this churn.
 
 ## YAML
 
-```
+```         
 ---
-title: "Patagonia CRM Dashboard"
-output: 
-  flexdashboard::flex_dashboard:
-    orientation: rows
-    vertical_layout: scroll
-runtime: shiny
+title: "iFood Customer Churn Dashboard"
+author: "Your Name"
+format: 
+  dashboard:
+    logo: ifood.png
 ---
 ```
 
-We have a new `output` (R Markdown's `format`) with its own arguments:
-
-- `orientation` is the dashboard layout, either `columns` or `rows`.
-- `vertical_layout` is how the dashboard fits, either `fill` or `scroll`.
-
-To use shiny functions, we also need to add `runtime: shiny` to the YAML. **Pay attention to the white space in the YAML!**
+Make sure the logo you want to include is in your working directory!
 
 ## Setup
 
-The first code cell is named `setup` and has `#| include: false` (the opposite of `#| eval: false`). Load packages and import data with *minimal* wrangling (it really should be already-wrangled data).
+Load packages and import data with *minimal* wrangling (it really should be already-wrangled data).
 
-Note that the data **must be in the same folder as the dashboard .Rmd** which is also the *working directory* for the dashboard.
+Note that the data **must be in the same folder as the dashboard .qmd** which is also the *working directory* for the dashboard.
 
-```{r eval=FALSE}
+```{r echo=FALSE}
 
-# Load packages.
+# Load packages and wrangled/cleaned data.
 
 library(tidyverse)
-library(flexdashboard)
-library(shiny)
-library(rsconnect)
-
-# Import data.
-
-customer_data <- read_csv("customer_data.csv") |> 
-  mutate(age = 2023 - birth_year)
-```
-
-## Layout | Add Rows and Columns
-
-Depending on the `orientation` argument, additional elements will be in rows or columns. You can manage your dashboard layout by adding additional rows and columns.
+ifood <- read_csv('ifood_cleaned.csv', show_col_types = FALSE)
 
 ```
-Row
-------------------------------------------
+
+## Final Touches to Data
+
+Because we want the visualizations to be very polished and neat, some final touches may be necessary to ensure the data is ready to go. In this case, we want to make sure that the income levels and education levels are in order from lowest to highest.
+
+```{r}
+
+# Ensure the data is ordered correctly for clean visualizations.
+
+ifood <- ifood |>
+  mutate(income_bracket = factor(
+    income_bracket, levels = c("0-25K", "25-50K", "50-100K", 
+                               "100-200K", "200K+")),
+         Education = factor(
+           Education, levels = c("High School", "Bachelor's", 
+                                 "Master's", "PhD")))
+
 ```
 
-or 
+## Layout \| Add Rows
 
-```
-Column
-------------------------------------------
+You can manage your dashboard layout by adding rows or columns. Imagine these as creating a rough sketch of how you want your dashboard to look, and what goes where.
+
+For this dashboard, we'll use rows. We want three customer churn KPIs (recency, churn rate, and number of complaints) to go across the top, with two larger charts beneath them.
+
+------------------------------------------------------------------------
+
+<center>![](Figures/ifood_dashboard.png){width="850px"}</center>
+
+------------------------------------------------------------------------
+
+To start a new row, paste this header into your Quarto document beneath the setup code chunk:
+
+```         
+## Row {height=30%}
 ```
 
-Code cells following the row or column header will show up in that row or column.
+The percentage indicates how much of the vertical space you want the row to take up. Code chunks following the row or column header will show up in that row or column.
+
+## Layout \| Row 1 - Value Boxes
+
+To achieve these clean and simple value boxes, we use this code inside an R code chunk:
+
+```         
+#| content: valuebox
+#| title: "Average Recency"
+#| icon: "clock"
+#| color: "#ff1728"
+round(mean(ifood$Recency), 1)
+```
+
+The title section allows us to include words in the value box. The icon comes from the free section of [Font Awesome](https://fontawesome.com/search?ic=free&o=r). Simply type in the name of an icon and it will appear. The color can be any hex code. The last line is where any calculations for the value should go.
 
 ---
 
-<center>
-![](Figures/flexdashboard_row-orientation.png){width=900px}
-</center>
+<center>![](Figures/valuebox.png){width="850px"}</center>
 
 ---
 
-<center>
-![](Figures/flexdashboard_column-orientation.png){width=900px}
-</center>
-
-## Layout | Add a Sidebar
-
-The interactive elements of a dashboard are conveniently included in a sidebar. Let's add one.
+Here is the code for the second value box. The paste0 is just a function that links strings together with 0 spaces.
 
 ```
-Sidebar {.sidebar}
-------------------------------------------
+#| content: valuebox
+#| title: "Current Churn Rate"
+#| icon: "calendar"
+#| color: "#ff1728"
+paste0(round(mean(ifood$Churned == "Yes") * 100, 1), "%")
+```
+---
+
+<center>![](Figures/valuebox2.png){width="850px"}</center>
+
+## Your Turn!
+
+Can you see if you can figure out how to create the last value box? It should look like this:
+
+<center>![](Figures/valuebox3.png){width="850px"}</center>
+
+## Solution
+
+```
+#| content: valuebox
+#| title: "# of Complaints"
+#| icon: "emoji-frown"
+#| color: "#ff1728"
+sum(ifood$Complain == "Yes")
+
 ```
 
-Code cells following the sidebar header will show up in the sidebar.
+## Layout \| Row 2 - Graphs
 
-## Input Functions
+For our second row, we want it to take up the remainder of the space so we use
 
-**Input functions** make the dashboard interactive. They allow the use to select or input variables which in turn adjust the visualizations. There are many different input functions, but they all include an input ID and an input label.
-
-Let's add one to the sidebar.
-
-```{r eval=FALSE}
-
-selectInput(
-  inputId = "region",
-  label = "Region",
-  choices = unique(customer_data$region)
-)
 ```
-
-Note that `customer_data$region` is a way to `select(customer_data, region)` without {dplyr}. Furthermore, we can't run this code cell on it's own -- we need to render the entire document to see the dashboard.
-
-## Render Functions
-
-Visualizations are at the heart of any interactive dashboard. In order to reference a *reactive* element like the input function we need to create the plot in a *reactive* environment using **render functions**.
-
-Let's add a row, name the dashboard element within the row with a sub-heading `### Age and Credit`, and use a render function to add a plot.
-
-```{r eval=FALSE}
-
-renderPlot({
-  customer_data |> 
-    filter(region == input$region) |> 
-    ggplot(aes(x = age, y = credit, color = gender)) +
-    geom_jitter(size = 3, alpha = 0.5)
-})
+## Row {height=70%}
 ```
+First, we want to include a time series chart of the churn rate over time. As you can see, the plot uses our normal ggplot syntax with a similar dashboard heading to what we've seen so far today.
 
-Note that to call an input you use `input$inputid`.
+---
+```
+#| title: Churn Rate Over Time
+#| fig-width: 5
+#| fig-height: 4
+# Churn rate over time
+ifood |> 
+  mutate(month = floor_date(Dt_Customer, "month")) |> 
+  count(month, Churned) |> 
+  group_by(month) |> 
+  mutate(prop = n / sum(n)) |> 
+  filter(Churned == "Yes") |> 
+  ggplot(aes(x = month, y = prop)) +
+  geom_line(color = '#ff1728', size = 1.5) + 
+  scale_x_date(limits = c(min(ifood$Dt_Customer), max(ifood$Dt_Customer))) +
+  labs(
+    title = "Churn Rate Over Time",
+    x = 'Enrollment Month',
+    y = 'Churn Rate (%)',
+    subtitle = 'Based on a sample of 2,240 iFood customers'
+  ) +
+  theme_minimal()
+
+```
+---
+
+<center>![](Figures/timeseries.png){width="850px"}</center>
 
 ---
 
-Let's add another row, name the dashboard element within the new row with a sub-heading `### Average Income`, and use another render function to produce a numeric summary in a call-out box with [favicon](https://fontawesome.com/v4.7.0/icons/).
+Remember, for your project you will be doing this work. Cleaning and prepping the data, making calculations, and figuring out the best way to visualize it.
 
-```{r eval=FALSE}
-# Add a value box (numeric summary).
-renderValueBox({
-  # Compute the average income.
-  avg_income <- customer_data |> 
-    filter(region == input$region) |> 
-    summarize(avg_income = mean(income)) |> 
-    pull()
-  
-  # Print the average income in a value box.
-  valueBox(round(avg_income), icon = "fa-money")
-})
+## Layout \| Row 2 - Tabs
+
+We have a lot of different demographics we want to look at. Age, income, marital status, education, and others. One way to display these without creating an overly long report is by using tabs that the viewer can switch between. Add this heading before the next code chunks:
+
 ```
-
----
-
-Within the same row, let's add a second call-out box named `### Average Credit Score`.
-
-```{r eval=FALSE}
-# Add a value box (numeric summary).
-renderValueBox({
-  # Compute the average credit.
-  avg_credit <- customer_data |> 
-    filter(region == input$region) |> 
-    summarize(avg_credit = mean(credit)) |> 
-    pull()
-  
-  # Print the average credit in a value box.
-  valueBox(round(avg_credit), icon = "fa-bank")
-})
+### Column {.tabset}
 ```
-
 ---
 
-Finally, let's add a third call-out box named `### Median Age`.
+The rest of the code is included in your starter code. It contains all the different versions of the stacked bar chart, but for each demographic.
 
-```{r eval=FALSE}
-# Add a value box (numeric summary).
-renderValueBox({
-  # Compute the median age.
-  med_age <- customer_data |> 
-    filter(region == input$region) |> 
-    summarize(med_age = median(age)) |> 
-    pull()
-  
-  # Print the median age in a value box.
-  valueBox(med_age, icon = "fa-address-book")
-})
+
+## Publishing Your Dashboard
+
+The easiest way to publish this Quarto dashboard for others to see is through Quarto Pub. Go to your terminal and type this command, replacing the document name with the one you've chosen:
+
 ```
-
-## Publish a Dashboard
-
-A dashboard is a kind of webapp and needs to be hosted on a server to share. Sign up for a free [shinyapps.io account](https://www.shinyapps.io/admin/#/signup), choose a username, and authorize API access with an API token and secret, which you'll need to *show and copy*.
-
-<center>
-![](Figures/flexdashboard_shinyapps-api.png){width=900px}
-</center>
-
+quarto publish quarto-pub document.qmd
+```
 ---
 
-You can find your API token and secret again under *Tokens*.
+Watch the prompts as they pop up in the terminal. If you haven’t published to Quarto Pub before, the publish command will prompt you to authenticate, which will require creating an account. It's easiest to just sign up with Google. After confirming that you want to publish, your content will be rendered and deployed, and then a browser opens to view your site.
 
-<center>
-![](Figures/flexdashboard_shinyapps-tokens.png){width=900px}
-</center>
 
----
-
-You can then publish your rendered dashboard.
-
-<center>
-![](Figures/flexdashboards_publish-01.png){width=900px}
-</center>
-
----
-
-Treat the title like a variable name and publish (which may take a few minutes)!
-
-<center>
-![](Figures/flexdashboards_publish-02.png){width=900px}
-</center>
 
 ## Live Coding Exercise
 
-What if we would like to add a regression line to our plot? How can we do that?
+What are some ways we could improve this dashboard? What kind of visualizations would you like to see?
 
 ## Wrapping Up
 
 *Summary*
 
-- Discussed communicating marketing insights with your audience in mind.
-- Walked through creating a dashboard with R Markdown and {shiny}.
+-   Discussed communicating marketing insights with your audience in mind.
+-   Walked through creating a dashboard with Quarto
 
 *Next Time*
 
-- Our first project week!
-
-*Supplementary Material*
-
-- [More on {flexdashboard}](https://pkgs.rstudio.com/flexdashboard/index.html)
-- [*Mastering Shiny*](https://mastering-shiny.org)
+-   Our first project week!
 
 ## Exercise 7
 
-In RStudio, do the following in *two* documents.
+In RStudio, do the following.
 
-1. In a Quarto document with `format: docx`, wrangle the customer data to include the total amount spent in-store for each customer. Write this data as a CSV file *in the Exercises folder*.
-2. In an R Markdown document, modify the dashboard from class by importing the new data, adding a second input function to the sidebar to select from `college_degree`, modifying the plot to filter on both input functions, replacing age with total amount spent in-store in the plot, and modifying the call-out boxes to filter on both input functions.
-3. Knit the R Markdown document and publish it on shinyapps.io. Include the link at the end of the Quarto document (add a link with `[text](URL)`), rendered as a Word document, and upload to Canvas.
+1.  Look over the project instructions file and different options for pain points to address, and write a plan for how you will accomplish your project. Include at least a few sentences addressing every part of the project, including cleaning the data, creating visualizations, creating the dashboard, and the executive summary.
+2. Render your plan as a Word document, and upload to Canvas.
