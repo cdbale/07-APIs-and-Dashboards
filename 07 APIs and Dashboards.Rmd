@@ -169,11 +169,11 @@ For our second row, we want it to take up the remainder of the space so we use
 First, we want to include a time series chart of the churn rate over time. As you can see, the plot uses our normal ggplot syntax with a similar dashboard heading to what we've seen so far today.
 
 ---
+
 ```
 #| title: Churn Rate Over Time
 #| fig-width: 5
 #| fig-height: 4
-# Churn rate over time
 ifood |> 
   mutate(month = floor_date(Dt_Customer, "month")) |> 
   count(month, Churned) |> 
